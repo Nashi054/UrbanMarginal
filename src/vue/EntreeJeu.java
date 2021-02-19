@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controleur.Controle;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -13,10 +15,11 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class demarrage extends JFrame {
+public class EntreeJeu extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
+	private static Controle controle;
 
 	/**
 	 * Launch the application.
@@ -25,7 +28,7 @@ public class demarrage extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					demarrage frame = new demarrage();
+					EntreeJeu frame = new EntreeJeu(controle);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,7 +40,7 @@ public class demarrage extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public demarrage() {
+	public EntreeJeu(Controle controle) {
 		setTitle("Urban Marginal");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 320, 160);
@@ -56,7 +59,7 @@ public class demarrage extends JFrame {
 		JButton btnStartServer = new JButton("Start");
 		btnStartServer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Arene.main(null);
+				controle.evenementEntreeJeu("serveur");
 			}
 		});
 		btnStartServer.setBounds(205, 7, 89, 23);
@@ -81,7 +84,7 @@ public class demarrage extends JFrame {
 		JButton btnConnect = new JButton("Connect");
 		btnConnect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChoixJoueur.main(null);
+				controle.evenementEntreeJeu(textField.getText());
 			}
 		});
 		btnConnect.setBounds(205, 57, 89, 23);
@@ -98,5 +101,7 @@ public class demarrage extends JFrame {
 		});
 		btnExit.setBounds(205, 91, 89, 23);
 		contentPane.add(btnExit);
+		
+		this.controle = controle;
 	}
 }
