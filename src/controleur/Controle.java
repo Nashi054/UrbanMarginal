@@ -58,7 +58,7 @@ public class Controle implements AsyncResponse {
 			if (typeJeu == "client") {
 				this.frmEntreeJeu.dispose();
 				this.frmArene = new Arene();
-				this.frmChoixJoueur = new ChoixJoueur();
+				this.frmChoixJoueur = new ChoixJoueur(this);
 				this.frmChoixJoueur.setVisible(true);
 			}
 			break;
@@ -67,6 +67,11 @@ public class Controle implements AsyncResponse {
 		case "deconnexion" :
 			break;
 		}
+	}
+	
+	public void evenementChoixJoueur(String pseudo, int numPerso) {
+		this.frmChoixJoueur.dispose();
+		this.frmArene.setVisible(true);
 	}
 
 }
