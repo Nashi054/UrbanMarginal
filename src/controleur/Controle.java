@@ -1,5 +1,8 @@
 package controleur;
 
+import modele.Jeu;
+import modele.JeuClient;
+import modele.JeuServeur;
 import outils.connexion.AsyncResponse;
 import outils.connexion.ClientSocket;
 import outils.connexion.Connection;
@@ -13,13 +16,24 @@ import vue.EntreeJeu;
  * @author emds
  *
  */
-public class Controle implements AsyncResponse {
+public class Controle implements AsyncResponse, Global {
 
+	/**
+	 * frame de type EntreeJeu
+	 */
 	private EntreeJeu frmEntreeJeu ;
+	/**
+	 * frame de type Arene
+	 */
 	private Arene frmArene;
+	/**
+	 * frame de type ChoixJoueur
+	 */
 	private ChoixJoueur frmChoixJoueur;
-	private String typeJeu;
-	private static final int PORT = 6666;
+	/**
+	 * objet de type Jeu
+	 */
+	private Jeu leJeu;
 
 	/**
 	 * Méthode de démarrage
@@ -37,41 +51,78 @@ public class Controle implements AsyncResponse {
 		this.frmEntreeJeu.setVisible(true);
 	}
 	
+	/**
+	 * Méthode d'entrée de jeu
+	 * Teste si le jeu lancé est de type serveur ou client, puis agit en conséquence
+	 * @param info contient l'information "serveur" ou l'adresse IP du client
+	 */
 	public void evenementEntreeJeu(String info) {
+		/*
+		 * si le jeu lancé est un serveur, créer un socket serveur, ferme la frame d'entrée jeu et créer une frame arène
+		 */
 		if (info == "serveur") {
-			typeJeu = info;
 			ServeurSocket serveurSocket = new ServeurSocket(this, PORT);
+			this.leJeu = new JeuServeur(this);
 			this.frmEntreeJeu.dispose();
 			this.frmArene = new Arene();
 			this.frmArene.setVisible(true);
 		}
+		/**
+		 * sinon, créer un socket client
+		 */
 		else {
-			typeJeu = "client";
 			ClientSocket clientSocket = new ClientSocket(this, info, PORT);
 		}
 	}
-
+	
+	/**
+	 * Méthode de reception d'un jeu client
+	 */
 	@Override
 	public void reception(Connection connection, String ordre, Object info) {
 		switch(ordre) {
 		case "connexion" :
-			if (typeJeu == "client") {
+			if (!(this.leJeu instanceof JeuServeur)) {
+				this.leJeu = new JeuClient(this);
+				this.leJeu.connexion(connection);
 				this.frmEntreeJeu.dispose();
 				this.frmArene = new Arene();
+				this.frmArene.setVisible(false);
 				this.frmChoixJoueur = new ChoixJoueur(this);
 				this.frmChoixJoueur.setVisible(true);
 			}
+			else {
+				this.leJeu.connexion(connection);
+			}
 			break;
 		case "réception" :
+			this.leJeu.reception(connection, info);
 			break;
 		case "deconnexion" :
 			break;
 		}
 	}
 	
+	/**
+	 * Méthode de choix du joueur
+	 * Ferme la frame ChoixJoueur et rend visible la frame Arene, puis envoi les informations du joueur vers le jeu client
+	 * @param pseudo contient le nom du joueur
+	 * @param numPerso contient le numéro du personnage sélectionné
+	 */
 	public void evenementChoixJoueur(String pseudo, int numPerso) {
 		this.frmChoixJoueur.dispose();
 		this.frmArene.setVisible(true);
+		JeuClient jeuClient = (JeuClient)leJeu;
+		jeuClient.envoi("pseudo"+"~"+pseudo+"~"+numPerso);
+	}
+	
+	/**
+	 * Méthode appelant la méthode envoi de l'objet connection
+	 * @param connection appelant la méthode d'envoi de la classe Connection
+	 * @param objet l'objet à envoyer
+	 */
+	public void envoi(Connection connection, Object objet) {
+		connection.envoi(objet);
 	}
 
 }

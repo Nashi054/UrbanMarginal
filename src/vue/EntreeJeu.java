@@ -19,23 +19,7 @@ public class EntreeJeu extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
-	private static Controle controle;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					EntreeJeu frame = new EntreeJeu(controle);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private Controle controle;
 
 	/**
 	 * Create the frame.

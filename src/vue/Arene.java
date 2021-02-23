@@ -16,10 +16,13 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
+
+import controleur.Global;
+
 import javax.swing.UIManager;
 import javax.swing.JScrollBar;
 
-public class Arene extends JFrame {
+public class Arene extends JFrame implements Global {
 
 	private JPanel contentPane;
 
@@ -59,8 +62,7 @@ public class Arene extends JFrame {
 		JLabel lblFond = new JLabel("");
 		lblFond.setBounds(0, 0, 800, 600);
 		contentPane.add(lblFond);
-		String cheminFond = "fonds/fondarene.jpg";
-		URL resourceFond = getClass().getClassLoader().getResource(cheminFond);
+		URL resourceFond = getClass().getClassLoader().getResource(CHEMINFOND);
 		lblFond.setIcon(new ImageIcon(resourceFond));
 		
 		/**

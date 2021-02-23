@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controleur.Controle;
+import controleur.Global;
 
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
@@ -24,30 +25,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class ChoixJoueur extends JFrame {
+public class ChoixJoueur extends JFrame implements Global {
 
 	private JPanel contentPane;
 	private JLabel lblPersonnage;
 	private JTextPane txtPseudo;
-	private static Controle controle;
+	private Controle controle;
 	private int numPerso;
-	private static final int NBPERSO = 3;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ChoixJoueur frame = new ChoixJoueur(controle);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
@@ -166,7 +150,7 @@ public class ChoixJoueur extends JFrame {
 		 * Text area to enter the player's name
 		 */
 		txtPseudo = new JTextPane();
-		txtPseudo.setBounds(144, 249, 118, 15);
+		txtPseudo.setBounds(143, 244, 118, 20);
 		contentPane.add(txtPseudo);
 		
 		/**
@@ -175,8 +159,7 @@ public class ChoixJoueur extends JFrame {
 		JLabel lblFond = new JLabel("");
 		lblFond.setBounds(0, 0, 400, 275);
 		contentPane.add(lblFond);
-		String cheminFond = "fonds/fondchoix.jpg";
-		URL resourceFond = getClass().getClassLoader().getResource(cheminFond);
+		URL resourceFond = getClass().getClassLoader().getResource(CHEMINCHOIX);
 		lblFond.setIcon(new ImageIcon(resourceFond));
 		
 		this.controle = controle;
