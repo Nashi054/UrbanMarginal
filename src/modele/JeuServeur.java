@@ -3,14 +3,17 @@ package modele;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import javax.swing.JLabel;
+
 import controleur.Controle;
+import controleur.Global;
 import outils.connexion.Connection;
 
 /**
  * Gestion du jeu côté serveur
  *
  */
-public class JeuServeur extends Jeu {
+public class JeuServeur extends Jeu implements Global {
 
 	/**
 	 * Collection de murs
@@ -30,7 +33,7 @@ public class JeuServeur extends Jeu {
 	
 	@Override
 	public void connexion(Connection connection) {
-		lesJoueurs.put(connection, new Joueur());
+		lesJoueurs.put(connection, new Joueur(this));
 	}
 
 	@Override
@@ -38,8 +41,11 @@ public class JeuServeur extends Jeu {
 		String temp = information.toString();
 		String[] info = temp.split("~");
 		System.out.println(info[0]);
-		if (info[0].contains("pseudo")) {
-			(lesJoueurs.get(connection)).initPerso(info[1], Integer.parseInt(info[2]));
+		switch (info[0]) {
+			case "pseudo":
+				controle.evenementJeuServeur(AJOUTPANELMUR, connection);
+				(lesJoueurs.get(connection)).initPerso(info[1], Integer.parseInt(info[2]), lesJoueurs.values(), lesMurs);
+				break;
 		}
 	}
 	
@@ -58,6 +64,24 @@ public class JeuServeur extends Jeu {
 	 * Génération des murs
 	 */
 	public void constructionMurs() {
+		for (int k = 0; k < NBMURS; k++) {
+			lesMurs.add(new Mur());
+			this.controle.evenementJeuServeur(AJOUTMUR, lesMurs.get(lesMurs.size()-1).getjLabel());
+		}
+	}
+	
+	/**
+	 * Ajoute un joueur dans l'arène serveur
+	 * @param jLabel objet personnage joueur
+	 */
+	public void ajoutJLabelJeuAren(JLabel jLabel) {
+		controle.evenementJeuServeur(AJOUTJLABELJEU, jLabel);
+	}
+	
+	public void envoiJeuATous() {
+		for (Connection connection : lesJoueurs.keySet()) {
+			controle.evenementJeuServeur(AJOUTPANELJEU, connection);
+		}
 	}
 	
 }

@@ -25,7 +25,27 @@ import javax.swing.JScrollBar;
 public class Arene extends JFrame implements Global {
 
 	private JPanel contentPane;
+	private JPanel jpnMurs;
+	private JPanel jpnJeu;
 
+	public JPanel getJpnJeu() {
+		return jpnJeu;
+	}
+
+	public void setJpnJeu(JPanel jpnJeu) {
+		this.jpnJeu.removeAll();
+		this.jpnJeu.add(jpnJeu);
+		this.jpnJeu.repaint();
+	}
+
+	public JPanel getJpnMurs() {
+		return jpnMurs;
+	}
+
+	public void setJpnMurs(JPanel jpnMurs) {
+		this.jpnMurs.add(jpnMurs);
+		this.jpnMurs.repaint();
+	}
 	/**
 	 * Launch the application.
 	 */
@@ -57,6 +77,24 @@ public class Arene extends JFrame implements Global {
 		this.pack();
 		
 		/**
+		 * Shows the players' characters
+		 */
+		jpnJeu = new JPanel();
+		jpnJeu.setOpaque(false);
+		jpnJeu.setBounds(0, 0, 800, 600);
+		jpnJeu.setLayout(null);
+		contentPane.add(jpnJeu);
+		
+		/**
+		 * Shows the walls
+		 */
+		jpnMurs = new JPanel();
+		jpnMurs.setOpaque(false);
+		jpnMurs.setBounds(0, 0, 800, 600);
+		jpnMurs.setLayout(null);
+		contentPane.add(jpnMurs);
+		
+		/**
 		 * Shows the arena background
 		 */
 		JLabel lblFond = new JLabel("");
@@ -82,5 +120,23 @@ public class Arene extends JFrame implements Global {
 		textArea.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		textArea.setBounds(0, 620, 800, 250);
 		contentPane.add(textArea);
+	}
+	
+	/**
+	 * Méthode d'ajout des murs à l'arène
+	 * @param mur objet contenant un mur
+	 */
+	public void ajoutMurs(Object mur) {
+		jpnMurs.add((JLabel)mur);
+		jpnMurs.repaint();
+	}
+	
+	/**
+	 * Méthode d'ajout d'un personnage joueur
+	 * @param jLabel
+	 */
+	public void ajoutJLabelJeu(JLabel jeu) {
+		jpnJeu.add((JLabel)jeu);
+		jpnJeu.repaint();
 	}
 }

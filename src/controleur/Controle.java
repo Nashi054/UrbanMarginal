@@ -1,5 +1,8 @@
 package controleur;
 
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import modele.Jeu;
 import modele.JeuClient;
 import modele.JeuServeur;
@@ -65,6 +68,7 @@ public class Controle implements AsyncResponse, Global {
 			this.leJeu = new JeuServeur(this);
 			this.frmEntreeJeu.dispose();
 			this.frmArene = new Arene();
+			((JeuServeur)this.leJeu).constructionMurs();
 			this.frmArene.setVisible(true);
 		}
 		/**
@@ -112,8 +116,7 @@ public class Controle implements AsyncResponse, Global {
 	public void evenementChoixJoueur(String pseudo, int numPerso) {
 		this.frmChoixJoueur.dispose();
 		this.frmArene.setVisible(true);
-		JeuClient jeuClient = (JeuClient)leJeu;
-		jeuClient.envoi("pseudo"+"~"+pseudo+"~"+numPerso);
+		((JeuClient)this.leJeu).envoi("pseudo"+"~"+pseudo+"~"+numPerso);
 	}
 	
 	/**
@@ -123,6 +126,35 @@ public class Controle implements AsyncResponse, Global {
 	 */
 	public void envoi(Connection connection, Object objet) {
 		connection.envoi(objet);
+	}
+	
+	/**
+	 * Méthode de création de l'arène d'un jeu serveur
+	 * @param ordre indique l'ordre à executer
+	 * @param info contient l'objet à ajouter à l'arène
+	 */
+	public void evenementJeuServeur(String ordre, Object info) {
+		if (ordre.contains(AJOUTMUR)) {
+			frmArene.ajoutMurs(info);
+		}
+		else if (ordre.contains(AJOUTPANELMUR)) {
+			leJeu.envoi((Connection)info, frmArene.getJpnMurs());
+		}
+		else if (ordre.contains(AJOUTJLABELJEU)) {
+			frmArene.ajoutJLabelJeu((JLabel)info);
+		}
+		else if (ordre.contains(AJOUTPANELJEU)) {
+			leJeu.envoi((Connection)info, frmArene.getJpnJeu());
+		}
+	}
+	
+	public void evenementJeuClient(String ordre, Object info) {
+		if (ordre.contains(AJOUTPANELMUR)) {
+			frmArene.setJpnMurs((JPanel)info);
+		}
+		else if (ordre.contains(AJOUTPANELJEU)) {
+			frmArene.setJpnJeu((JPanel)info);
+		}
 	}
 
 }
