@@ -37,13 +37,10 @@ public abstract class Objet {
 	 */
 	public Boolean toucheObjet (Objet objet) {
 		if (this != null && objet != null) {
-			if (this.posX + this.getjLabel().getWidth() > objet.posX &&
-				this.posX < objet.posX+objet.getjLabel().getWidth() &&
-				this.posY + this.getjLabel().getHeight() > objet.posY &&
-				this.posY < objet.posY+objet.getjLabel().getHeight()) {
-					return true;
-			}
-			return false;
+			return this.posX + this.getjLabel().getWidth() > objet.posX &&
+					this.posX < objet.posX+objet.getjLabel().getWidth() &&
+					this.posY + this.getjLabel().getHeight() > objet.posY &&
+					this.posY < objet.posY+objet.getjLabel().getHeight();
 		}
 		return false;
 	}

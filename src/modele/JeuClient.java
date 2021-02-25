@@ -12,8 +12,15 @@ import outils.connexion.Connection;
  */
 public class JeuClient extends Jeu implements Global {
 	
+	/**
+	 * Objet de connection
+	 */
 	private Connection connection;
+	/**
+	 * Variable pour tester si les murs ont été générés ou non
+	 */
 	private Boolean mursOK;
+	
 	/**
 	 * Controleur
 	 */
@@ -22,11 +29,20 @@ public class JeuClient extends Jeu implements Global {
 		this.mursOK = false;
 	}
 	
+	/**
+	 * Connection au serveur
+	 * @param connection objet de connection
+	 */
 	@Override
 	public void connexion(Connection connection) {
 		this.connection = connection;
 	}
 
+	/**
+	 * Reception des informations envoyées par le serveur (murs et personnages)
+	 * @param connection objet de connection
+	 * @param information contient l'information à afficher sur le jeu client
+	 */
 	@Override
 	public void reception(Connection connection, Object information) {
 		if (information instanceof JPanel && mursOK == false) {
@@ -35,6 +51,9 @@ public class JeuClient extends Jeu implements Global {
 		}
 		else if (information instanceof JPanel && mursOK == true) {
 			controle.evenementJeuClient(AJOUTPANELJEU, information);
+		}
+		else if (information instanceof String) {
+			controle.evenementJeuClient(MODIFTCHAT, information);
 		}
 	}
 	

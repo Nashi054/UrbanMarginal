@@ -52,6 +52,21 @@ public class Joueur extends Objet implements Global {
 	private JLabel message;
 	
 	/**
+	 * getter sur pseudo
+	 * @return pseudo
+	 */
+	public String getPseudo() {
+		return pseudo;
+	}
+	/**
+	 * setter sur pseudo
+	 * @param pseudo
+	 */
+	public void setPseudo(String pseudo) {
+		this.pseudo = pseudo;
+	}
+	
+	/**
 	 * Constructeur
 	 */
 	public Joueur(JeuServeur jeuServeur) {

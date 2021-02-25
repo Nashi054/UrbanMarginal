@@ -31,11 +31,20 @@ public class JeuServeur extends Jeu implements Global {
 		this.controle = controle;
 	}
 	
+	/**
+	 * Créer un nouveau joueur dans le dictionnaire à lorsqu'un client se connecte à l'arène du serveur
+	 * @param connection sert de clé pour le dictionnaire
+	 */
 	@Override
 	public void connexion(Connection connection) {
 		lesJoueurs.put(connection, new Joueur(this));
 	}
 
+	/**
+	 * Reception des informations à afficher dans le serveur (murs et personnages)
+	 * @param connection objet de connexion
+	 * @param information contient le pseudo et le numéro du personnage
+	 */
 	@Override
 	public void reception(Connection connection, Object information) {
 		String temp = information.toString();
@@ -45,6 +54,10 @@ public class JeuServeur extends Jeu implements Global {
 			case "pseudo":
 				controle.evenementJeuServeur(AJOUTPANELMUR, connection);
 				(lesJoueurs.get(connection)).initPerso(info[1], Integer.parseInt(info[2]), lesJoueurs.values(), lesMurs);
+				controle.evenementJeuServeur(AJOUTPHRASE, "*** "+info[1]+" vient de se connecter ***");
+				break;
+			case "tchat":
+				controle.evenementJeuServeur(AJOUTPHRASE, lesJoueurs.get(connection).getPseudo() + " > " + info[1]);
 				break;
 		}
 	}
@@ -57,7 +70,10 @@ public class JeuServeur extends Jeu implements Global {
 	 * Envoi d'une information vers tous les clients
 	 * fais appel plusieurs fois à l'envoi de la classe Jeu
 	 */
-	public void envoi() {
+	public void envoi(Object info) {
+		for (Connection connection : lesJoueurs.keySet()) {
+			super.envoi(connection, info);
+		}
 	}
 
 	/**
@@ -78,6 +94,9 @@ public class JeuServeur extends Jeu implements Global {
 		controle.evenementJeuServeur(AJOUTJLABELJEU, jLabel);
 	}
 	
+	/**
+	 * Envoi les joueurs de l'arène serveur vers tous les clients
+	 */
 	public void envoiJeuATous() {
 		for (Connection connection : lesJoueurs.keySet()) {
 			controle.evenementJeuServeur(AJOUTPANELJEU, connection);

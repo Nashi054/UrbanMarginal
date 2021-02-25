@@ -17,55 +17,103 @@ import javax.swing.border.LineBorder;
 import java.awt.Color;
 import javax.swing.border.TitledBorder;
 
+import controleur.Controle;
 import controleur.Global;
 
 import javax.swing.UIManager;
 import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Arene extends JFrame implements Global {
-
+	
+	/**
+	 * Frame contenant les objets de l'arène
+	 */
 	private JPanel contentPane;
+	/**
+	 * Frame des murs de l'arène
+	 */
 	private JPanel jpnMurs;
+	/**
+	 * Frame des personnages dans l'arène
+	 */
 	private JPanel jpnJeu;
+	/**
+	 * Zone d'affichage du chat
+	 */
+	private JTextArea txtChat;
+	/**
+	 * Objet contrôleur
+	 */
+	private Controle controle;
+	/**
+	 * Permet de vérifier s'il s'agit de l'arène d'un serveur ou d'un client
+	 */
+	private Boolean client;
 
+	/**
+	 * getter sur txtChat
+	 * @return txtChat
+	 */
+	public String getTxtChat() {
+		return txtChat.getText();
+	}
+	/**
+	 * setter sur txtChat
+	 * @param txtChat
+	 */
+	public void setTxtChat(String txtChat) {
+		this.txtChat.setText(txtChat);
+		this.txtChat.setCaretPosition(this.txtChat.getDocument().getLength());
+	}
+	
+	/**
+	 * getter sur jpnJeu
+	 * @return jpnJeu
+	 */
 	public JPanel getJpnJeu() {
 		return jpnJeu;
 	}
-
+	/**
+	 * setter sur jpnJeu
+	 * @param jpnJeu
+	 */
 	public void setJpnJeu(JPanel jpnJeu) {
 		this.jpnJeu.removeAll();
 		this.jpnJeu.add(jpnJeu);
 		this.jpnJeu.repaint();
 	}
 
+	/**
+	 * getter sur jpnMurs
+	 * @return jpnMurs
+	 */
 	public JPanel getJpnMurs() {
 		return jpnMurs;
 	}
-
+	/**
+	 * setter sur jpnMurs
+	 * @param jpnMurs
+	 */
 	public void setJpnMurs(JPanel jpnMurs) {
 		this.jpnMurs.add(jpnMurs);
 		this.jpnMurs.repaint();
-	}
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Arene frame = new Arene();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
 	}
 
 	/**
 	 * Create the frame.
 	 */
-	public Arene() {
+	public Arene(Controle controle, String client) {
+		
+		if (client.contains(CLIENT)) {
+			this.client = true;
+		}
+		else if (client.contains(SERVEUR)) {
+			this.client = false;
+		}
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -77,7 +125,7 @@ public class Arene extends JFrame implements Global {
 		this.pack();
 		
 		/**
-		 * Shows the players' characters
+		 * Shows the characters
 		 */
 		jpnJeu = new JPanel();
 		jpnJeu.setOpaque(false);
@@ -103,23 +151,44 @@ public class Arene extends JFrame implements Global {
 		URL resourceFond = getClass().getClassLoader().getResource(CHEMINFOND);
 		lblFond.setIcon(new ImageIcon(resourceFond));
 		
+		if (this.client == true) {
+			/**
+		 	* Shows the chatbox
+		 	*/
+			JTextPane txtSaisie = new JTextPane();
+			txtSaisie.setAutoscrolls(false);
+			txtSaisie.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						if (txtSaisie.getText() != "") {
+							controle.evenementArene(txtSaisie.getText());
+							txtSaisie.setText(null);
+						}
+					}
+				}
+			});
+			txtSaisie.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			txtSaisie.setBounds(0, 600, 800, 20);
+			contentPane.add(txtSaisie);
+		}
+		
 		/**
-		 * Shows the chatbox
+		 * Shows the scrollbar of the chat box
 		 */
-		JTextPane textPane = new JTextPane();
-		textPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		textPane.setBounds(0, 600, 800, 20);
-		contentPane.add(textPane);
+		JScrollPane jspChat = new JScrollPane();
+		jspChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		jspChat.setBounds(0, 625, 800, 245);
+		contentPane.add(jspChat);
 		
 		/**
 		 * Shows the text area to chat with other players
 		 */
-		JTextArea textArea = new JTextArea();
-		textArea.setEnabled(false);
-		textArea.setFocusable(false);
-		textArea.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		textArea.setBounds(0, 620, 800, 250);
-		contentPane.add(textArea);
+		txtChat = new JTextArea();
+		txtChat.setEditable(false);
+		jspChat.setViewportView(txtChat);
+		
+		this.controle = controle;
 	}
 	
 	/**
@@ -138,5 +207,14 @@ public class Arene extends JFrame implements Global {
 	public void ajoutJLabelJeu(JLabel jeu) {
 		jpnJeu.add((JLabel)jeu);
 		jpnJeu.repaint();
+	}
+	
+	/**
+	 * Ajoute la phrase saisie dans la fenêtre de chat
+	 * @param phrase
+	 */
+	public void ajoutTchat(String phrase) {
+		setTxtChat(getTxtChat() + phrase + "\r\n");
+		this.txtChat.setCaretPosition(this.txtChat.getDocument().getLength());
 	}
 }

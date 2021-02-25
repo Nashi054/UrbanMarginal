@@ -85,4 +85,20 @@ public interface Global {
 	 * ordre "ajout panel jeu"
 	 */
 	public static final String AJOUTPANELJEU = "ajout panel jeu";
-	}
+	/**
+	 * ordre "ajout phrase"
+	 */
+	public static final String AJOUTPHRASE = "ajout phrase";
+	/**
+	 * ordre "modif tchat"
+	 */
+	public static final String MODIFTCHAT = "modif tchat";
+	/**
+	 * ordre "client"
+	 */
+	public static final String CLIENT = "client";
+	/**
+	 * ordre "serveur"
+	 */
+	public static final String SERVEUR = "serveur";
+}

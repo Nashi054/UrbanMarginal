@@ -63,11 +63,11 @@ public class Controle implements AsyncResponse, Global {
 		/*
 		 * si le jeu lancé est un serveur, créer un socket serveur, ferme la frame d'entrée jeu et créer une frame arène
 		 */
-		if (info == "serveur") {
+		if (info == SERVEUR) {
 			ServeurSocket serveurSocket = new ServeurSocket(this, PORT);
 			this.leJeu = new JeuServeur(this);
 			this.frmEntreeJeu.dispose();
-			this.frmArene = new Arene();
+			this.frmArene = new Arene(this, SERVEUR);
 			((JeuServeur)this.leJeu).constructionMurs();
 			this.frmArene.setVisible(true);
 		}
@@ -90,7 +90,7 @@ public class Controle implements AsyncResponse, Global {
 				this.leJeu = new JeuClient(this);
 				this.leJeu.connexion(connection);
 				this.frmEntreeJeu.dispose();
-				this.frmArene = new Arene();
+				this.frmArene = new Arene(this, CLIENT);
 				this.frmArene.setVisible(false);
 				this.frmChoixJoueur = new ChoixJoueur(this);
 				this.frmChoixJoueur.setVisible(true);
@@ -146,8 +146,17 @@ public class Controle implements AsyncResponse, Global {
 		else if (ordre.contains(AJOUTPANELJEU)) {
 			leJeu.envoi((Connection)info, frmArene.getJpnJeu());
 		}
+		else if (ordre.contains(AJOUTPHRASE)) {
+			frmArene.ajoutTchat((String)info);
+			((JeuServeur)leJeu).envoi(frmArene.getTxtChat());
+		}
 	}
 	
+	/**
+	 * Envoi les informations du jeu serveur vers les jeux clients
+	 * @param ordre indique l'ordre à executer
+	 * @param info contient l'objet à ajouter à l'arène
+	 */
 	public void evenementJeuClient(String ordre, Object info) {
 		if (ordre.contains(AJOUTPANELMUR)) {
 			frmArene.setJpnMurs((JPanel)info);
@@ -155,6 +164,12 @@ public class Controle implements AsyncResponse, Global {
 		else if (ordre.contains(AJOUTPANELJEU)) {
 			frmArene.setJpnJeu((JPanel)info);
 		}
+		else if (ordre.contains(MODIFTCHAT)) {
+			frmArene.setTxtChat((String)info);
+		}
 	}
-
+	
+	public void evenementArene(String txtChat) {
+		((JeuClient)leJeu).envoi("tchat"+"~"+txtChat);
+	}
 }
