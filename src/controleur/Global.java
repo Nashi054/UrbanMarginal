@@ -101,4 +101,32 @@ public interface Global {
 	 * ordre "serveur"
 	 */
 	public static final String SERVEUR = "serveur";
+	/**
+	 * ordre "pseudo"
+	 */
+	public static final String PSEUDO = "pseudo";
+	/**
+	 * ordre "tchat"
+	 */
+	public static final String TCHAT = "tchat";
+	/**
+	 * ordre "action"
+	 */
+	public static final String ACTION = "action";
+	/**
+	 * nombre de pixels que parcours un pas
+	 */
+	public static final Integer PAS = 10;
+	/**
+	 * taille de la boule
+	 */
+	public static final Integer BOULE = 17;
+	/**
+	 * ordre "touche"
+	 */
+	public static final String TOUCHE = "touche";
+	/**
+	 * ordre "mort"
+	 */
+	public static final String MORT = "mort";
 }

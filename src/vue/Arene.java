@@ -53,6 +53,10 @@ public class Arene extends JFrame implements Global {
 	 * Permet de vérifier s'il s'agit de l'arène d'un serveur ou d'un client
 	 */
 	private Boolean client;
+	/**
+	 * Mémorise la direction de déplacement
+	 */
+	private Integer direction;
 
 	/**
 	 * getter sur txtChat
@@ -85,6 +89,7 @@ public class Arene extends JFrame implements Global {
 		this.jpnJeu.removeAll();
 		this.jpnJeu.add(jpnJeu);
 		this.jpnJeu.repaint();
+		this.contentPane.requestFocus();
 	}
 
 	/**
@@ -102,6 +107,22 @@ public class Arene extends JFrame implements Global {
 		this.jpnMurs.add(jpnMurs);
 		this.jpnMurs.repaint();
 	}
+	
+	public void deplacement(KeyEvent e) {
+		direction = -1;
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_UP:
+			case KeyEvent.VK_DOWN:
+			case KeyEvent.VK_LEFT:
+			case KeyEvent.VK_RIGHT:
+			case KeyEvent.VK_SPACE:
+				direction = e.getKeyCode();
+				break;
+		}
+		if (direction != -1) {
+			this.controle.evenementArene(direction);
+		}
+	}
 
 	/**
 	 * Create the frame.
@@ -118,6 +139,12 @@ public class Arene extends JFrame implements Global {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
+		contentPane.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+					deplacement(e);
+				}
+		});
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -164,6 +191,7 @@ public class Arene extends JFrame implements Global {
 						if (txtSaisie.getText() != "") {
 							controle.evenementArene(txtSaisie.getText());
 							txtSaisie.setText(null);
+							contentPane.requestFocus();
 						}
 					}
 				}
@@ -177,6 +205,12 @@ public class Arene extends JFrame implements Global {
 		 * Shows the scrollbar of the chat box
 		 */
 		JScrollPane jspChat = new JScrollPane();
+		jspChat.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				deplacement(e);
+			}
+		});
 		jspChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		jspChat.setBounds(0, 625, 800, 245);
 		contentPane.add(jspChat);
