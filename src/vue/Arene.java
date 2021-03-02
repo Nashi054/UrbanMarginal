@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -19,6 +20,7 @@ import javax.swing.border.TitledBorder;
 
 import controleur.Controle;
 import controleur.Global;
+import outils.son.Son;
 
 import javax.swing.UIManager;
 import javax.swing.JScrollBar;
@@ -57,6 +59,10 @@ public class Arene extends JFrame implements Global {
 	 * Mémorise la direction de déplacement
 	 */
 	private Integer direction;
+	/**
+	 * Tableau des sons de l'arène
+	 */
+	private Son[] lesSons = new Son[SONSARENE.length];
 
 	/**
 	 * getter sur txtChat
@@ -222,6 +228,16 @@ public class Arene extends JFrame implements Global {
 		txtChat.setEditable(false);
 		jspChat.setViewportView(txtChat);
 		
+		/**
+		 * Si le jeu est un client, remplie le tableau lesSons avec les sons correspondants
+		 */
+		if (this.client) {
+			for (int k = 0; k < lesSons.length; k++) {
+				URL ressourceSon = getClass().getClassLoader().getResource(SONSARENE[k]);
+				lesSons[k] = new Son(ressourceSon);
+			}
+		}
+		
 		this.controle = controle;
 	}
 	
@@ -250,5 +266,13 @@ public class Arene extends JFrame implements Global {
 	public void ajoutTchat(String phrase) {
 		setTxtChat(getTxtChat() + phrase + "\r\n");
 		this.txtChat.setCaretPosition(this.txtChat.getDocument().getLength());
+	}
+	
+	/**
+	 * Joue le son stocké dans lesSons à l'indice entré paramètre
+	 * @param numSon
+	 */
+	public void joueSon(Integer numSon) {
+		lesSons[numSon].play();
 	}
 }

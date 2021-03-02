@@ -56,8 +56,12 @@ public class Boule extends Objet implements Runnable, Global {
 		new Thread(this).start();
 	}
 
+	/**
+	 * méthode de déplacement de la boule
+	 */
 	@Override
 	public void run() {
+		jeuServeur.envoi(SONTIR);
 		joueur.affiche(MARCHE, 1);
 		jLabel.setVisible(true);
 		Joueur victime = null;
@@ -79,6 +83,7 @@ public class Boule extends Objet implements Runnable, Global {
 		} while (posX >= 0 && posX <= LARENE && victime == null && this.toucheCollectionObjet(lesMurs) == null);
 		
 		if (victime != null && !victime.estMort()) {
+			jeuServeur.envoi(SONBLESSE);
 			victime.perteVie();
 			joueur.gainVie();
 			for (int k = 1; k < 3; k++) {
@@ -87,6 +92,7 @@ public class Boule extends Objet implements Runnable, Global {
 			}
 			
 			if (victime.estMort()) {
+				jeuServeur.envoi(SONMORT);
 				for (int k = 1; k < 3; k++) {
 					victime.affiche(MORT, k);
 					pause(80, 0);
@@ -101,6 +107,11 @@ public class Boule extends Objet implements Runnable, Global {
 		jeuServeur.envoiJeuATous();
 	}
 	
+	/**
+	 * méthode de pauses permettant de ralentir les animation
+	 * @param milli millisecondes
+	 * @param nano nanosecondes
+	 */
 	public void pause(long milli, int nano) {
 		try {
 			Thread.sleep(milli, nano);

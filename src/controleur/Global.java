@@ -1,5 +1,8 @@
 package controleur;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public interface Global {
 	/**
 	 * port du serveur
@@ -129,4 +132,40 @@ public interface Global {
 	 * ordre "mort"
 	 */
 	public static final String MORT = "mort";
+	/**
+	 * chemin du fichier son welcome.wav
+	 */
+	public static final String WELCOME = "sons/welcome.wav";
+	/**
+	 * chemin du fichier son suivant.wav
+	 */
+	public static final String SUIVANT = "sons/suivant.wav";
+	/**
+	 * chemin du fichier son precedent.wav
+	 */
+	public static final String PRECEDENT = "sons/precedent.wav";
+	/**
+	 * chemin du fichier son go.wav
+	 */
+	public static final String GO = "sons/go.wav";
+	/**
+	 * Tableau des chemins des sons de l'arène
+	 */
+	public static final String[] SONSARENE = {"sons/fight.wav", "sons/hurt.wav", "sons/death.wav"};
+	/**
+	 * ordre "joue son"
+	 */
+	public static final String JOUESON = "joue son";
+	/**
+	 * numéro du son de tir
+	 */
+	public static final Integer SONTIR = 0;
+	/**
+	 * numéro du son de blessure
+	 */
+	public static final Integer SONBLESSE = 1;
+	/**
+	 * numéro du son de mort
+	 */
+	public static final Integer SONMORT = 2;
 }

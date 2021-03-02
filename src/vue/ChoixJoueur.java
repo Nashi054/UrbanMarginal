@@ -13,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 
 import controleur.Controle;
 import controleur.Global;
+import outils.son.Son;
 
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
@@ -32,6 +33,10 @@ public class ChoixJoueur extends JFrame implements Global {
 	private JTextPane txtPseudo;
 	private Controle controle;
 	private int numPerso;
+	private Son welcome;
+	private Son suivant;
+	private Son precedent;
+	private Son go;
 
 	/**
 	 * Create the frame.
@@ -73,6 +78,7 @@ public class ChoixJoueur extends JFrame implements Global {
 		contentPane.add(btnGO);
 		btnGO.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				go.play();
 				if (txtPseudo.getText() == "") {
 					JOptionPane.showMessageDialog(null, "La saisie du pseudo est obligatoire");
 					txtPseudo.requestFocus();
@@ -107,6 +113,7 @@ public class ChoixJoueur extends JFrame implements Global {
 		contentPane.add(btnFlecheDroite);
 		btnFlecheDroite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				suivant.play();
 				System.out.println("suivant");
 				numPerso++;
 				if (numPerso > NBPERSO) {
@@ -137,6 +144,7 @@ public class ChoixJoueur extends JFrame implements Global {
 		contentPane.add(btnFlecheGauche);
 		btnFlecheGauche.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				precedent.play();
 				System.out.println("précédent");
 				numPerso--;
 				if (numPerso < 1) {
@@ -165,6 +173,23 @@ public class ChoixJoueur extends JFrame implements Global {
 		this.controle = controle;
 		numPerso = 1;
 		affichePerso(numPerso);
+		
+		/**
+		 * instanciation des sons de la fenêtre ChoixJoueur
+		 */
+		URL resWelcome = getClass().getClassLoader().getResource(WELCOME);
+		welcome = new Son(resWelcome);
+		URL resSuivant = getClass().getClassLoader().getResource(SUIVANT);
+		suivant = new Son(resSuivant);
+		URL resPrecedent = getClass().getClassLoader().getResource(PRECEDENT);
+		precedent = new Son(resPrecedent);
+		URL resGo = getClass().getClassLoader().getResource(GO);
+		go = new Son(resGo);
+		
+		/**
+		 * Joue le son de bienvenue au lancement de la fenêtre ChoixJoueur
+		 */
+		welcome.play();
 	}
 	
 	/**

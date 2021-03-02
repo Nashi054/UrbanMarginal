@@ -167,6 +167,9 @@ public class Controle implements AsyncResponse, Global {
 		else if (ordre.contains(MODIFTCHAT)) {
 			frmArene.setTxtChat((String)info);
 		}
+		else if (ordre.contains(JOUESON)) {
+			frmArene.joueSon((Integer)info);
+		}
 	}
 	
 	public void evenementArene(Object objet) {
